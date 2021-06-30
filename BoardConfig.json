@@ -1,0 +1,8 @@
+{
+  "default": {
+    "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
+  },
+  "checkmate-1": {
+    "fen": "rnbqkbnr/2pppQpp/p6p/1p6/2B1P3/8/PPPP1PPP/RNB1K1NR"
+  }
+}

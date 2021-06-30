@@ -19,13 +19,13 @@ public class Game {
     }
 
     public void run() {
-            draw();
-            processInput();
-            update();
+        draw();
+        processInput();
+        update();
     }
 
     private void draw() {
-        ui.draw();
+        ui.draw(state.flatBoard());
     }
 
     private void processInput() {

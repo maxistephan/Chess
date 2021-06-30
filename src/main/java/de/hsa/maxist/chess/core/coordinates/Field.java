@@ -1,15 +1,26 @@
 package de.hsa.maxist.chess.core.coordinates;
 
-public final class Field {
+import de.hsa.maxist.chess.core.piece.Piece;
 
-    public final int x;
-    public final int y;
+import java.util.Optional;
 
-    public Field(int x, int y) {
-        this.x = x;
-        this.y = y;
+public class Field {
+
+    private Piece piece = null;
+
+    public Field() {
+        // EMPTY
     }
 
+    public void reset() {
+        this.piece = null;
+    }
 
+    public void setContent(Piece piece) {
+        this.piece = piece;
+    }
 
+    public Optional<Piece> getContent() {
+        return this.piece == null ? Optional.empty() : Optional.of(this.piece);
+    }
 }

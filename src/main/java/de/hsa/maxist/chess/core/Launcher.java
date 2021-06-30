@@ -17,8 +17,8 @@ public class Launcher extends Application {
 
         BorderPane root = new BorderPane();
 
-        UI ui = new FxUi(root);
-        Game chessGame = new Game(new Board(new BoardCfg()), ui);
+        UI ui = FxUi.createInstance();
+        Game chessGame = new Game(new Board(new BoardCfg(null)), ui);
 
         primaryStage.setScene((Scene) ui);
         primaryStage.sizeToScene();
