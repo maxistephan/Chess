@@ -22,43 +22,46 @@ public class FlatBoard implements BoardView, PieceContext {
         return this.flatboard;
     }
 
+    private Field getFieldAt(XY at) {
+        return flatboard[at.x + 8 * at.y];
+    }
+
     @Override
-    public PieceType getPieceTypeAt(XY field) {
+    public Piece getPieceAt(XY field) {
         if(flatboard[field.x + 8 * field.y].getContent().isPresent()) {
-            String type = flatboard[field.x + 8 * field.y].getContent().get().getClass().getSimpleName();
-            return PieceType.valueOf(type.toUpperCase(Locale.ENGLISH));
+            return flatboard[field.x + 8 * field.y].getContent().get();
         } else {
-            return PieceType.NONE;
+            return null;
         }
     }
 
     @Override
-    public void tryMove(King king, XY dest) {
+    public void tryMove(King king, Field dest) {
 
     }
 
     @Override
-    public void tryMove(Queen queen, XY dest) {
+    public void tryMove(Queen queen, Field dest) {
 
     }
 
     @Override
-    public void tryMove(Bishop bishop, XY dest) {
+    public void tryMove(Bishop bishop, Field dest) {
 
     }
 
     @Override
-    public void tryMove(Knight knight, XY dest) {
+    public void tryMove(Knight knight, Field dest) {
 
     }
 
     @Override
-    public void tryMove(Rook rook, XY dest) {
+    public void tryMove(Rook rook, Field dest) {
 
     }
 
     @Override
-    public void tryMove(Pawn pawn, XY dest) {
+    public void tryMove(Pawn pawn, Field dest) {
 
     }
 }

@@ -1,10 +1,10 @@
 package de.hsa.maxist.chess.core.board;
 
 import de.hsa.maxist.chess.core.coordinates.XY;
-import de.hsa.maxist.chess.core.piece.PieceType;
+import de.hsa.maxist.chess.core.piece.Piece;
 
 public interface BoardView {
 
-    PieceType getPieceTypeAt(XY field);
+    Piece getPieceAt(XY field);
 
 }

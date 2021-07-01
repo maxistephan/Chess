@@ -4,8 +4,8 @@ import de.hsa.maxist.chess.core.board.Board;
 import de.hsa.maxist.chess.core.command.Command;
 import de.hsa.maxist.chess.engine.ui.UI;
 
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Game {
 
@@ -19,9 +19,14 @@ public class Game {
     }
 
     public void run() {
-        draw();
-        processInput();
-        update();
+        new Timer("GameThread").scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                draw();
+                processInput();
+                update();
+            }
+        }, 100, (long) (1000f / FPS));
     }
 
     private void draw() {

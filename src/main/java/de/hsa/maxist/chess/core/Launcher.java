@@ -12,6 +12,8 @@ import javafx.stage.Stage;
 
 public class Launcher extends Application {
 
+    public static final boolean FXMODE = true;
+
     @Override
     public void start(Stage primaryStage) {
 
@@ -21,8 +23,10 @@ public class Launcher extends Application {
         Game chessGame = new Game(new Board(new BoardCfg(null)), ui);
 
         primaryStage.setScene((Scene) ui);
-        primaryStage.sizeToScene();
+        ((Scene)ui).getWindow().setOnCloseRequest(event -> System.exit(1));
+        primaryStage.setFullScreen(false);
         primaryStage.show();
+
         chessGame.run();
     }
 

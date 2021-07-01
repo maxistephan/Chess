@@ -14,6 +14,10 @@ public class Board {
         board = FenInterpreter.decode(fen);
     }
 
+    public Field[][] getBoard() {
+        return this.board;
+    }
+
     public FlatBoard flatten() {
         return new FlatBoard(board);
     }

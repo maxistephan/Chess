@@ -11,7 +11,6 @@ public class FenInterpreter {
     public static final String DEFAULT_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
     public static Field[][] decode(String fen) {
-
         Field[][] board = new Field[8][8];
 
         for(int i = 0; i < board.length; i++) {
@@ -54,8 +53,30 @@ public class FenInterpreter {
         return board;
     }
 
-    public static String encode(Field[] board) {
-        return null;
+    public static String encode(Field[][] board) {
+        StringBuilder sb = new StringBuilder();
+        int cnt = 0;
+        for(Field[] row : board) {
+            for(Field field : row) {
+                if(field.getContent().isPresent()) {
+                    if(cnt != 0) {
+                        sb.append(cnt);
+                        cnt = 0;
+                    }
+                    sb.append(field.getContent().get().getChar());
+                } else {
+                    cnt++;
+                }
+            }
+            if(cnt != 0) {
+                sb.append(cnt);
+                cnt = 0;
+            }
+            sb.append('/');
+        }
+
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
     }
 
 }
