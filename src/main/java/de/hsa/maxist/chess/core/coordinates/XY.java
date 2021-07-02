@@ -44,7 +44,7 @@ public final class XY {
      * @return position on Board
      ******************************************************************************************************************/
     public static XY getBoardSpot(XY clicked, int cellSize, int offset) {
-        return new XY((clicked.x - offset) / cellSize + 1, (clicked.y - offset) / cellSize + 1);
+        return new XY((clicked.x - offset) / cellSize, (clicked.y - offset) / cellSize);
     }
 
     @Override

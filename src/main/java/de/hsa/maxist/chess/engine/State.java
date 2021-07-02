@@ -5,6 +5,7 @@ import de.hsa.maxist.chess.core.board.FlatBoard;
 import de.hsa.maxist.chess.core.command.Command;
 import de.hsa.maxist.chess.core.command.GameCommandType;
 import de.hsa.maxist.chess.core.coordinates.XY;
+import de.hsa.maxist.chess.core.piece.Piece;
 import de.hsa.maxist.chess.engine.ui.UI;
 
 import java.lang.reflect.InvocationTargetException;
@@ -15,6 +16,7 @@ public class State {
 
     private final FlatBoard flatBoard;
     private final UI ui;
+    private Piece selectedPiece = null;
 
     public State(UI ui, Board board) {
         this.ui = ui;
@@ -26,7 +28,6 @@ public class State {
      ******************************************************************************************************************/
     public void update(Command command) {
         GameCommandType commandType = command.getCommandType();
-        System.out.println(commandType);
         if(commandType == GameCommandType.NONE) return;
 
         Object[] params = command.getParams();
@@ -52,27 +53,11 @@ public class State {
     }
 
     /*******************************************************************************************************************
-     * Drag the Piece on the field with given coordinates
-     * @param field Coordinates of the dragged field
-     ******************************************************************************************************************/
-    private void drag(XY field) {
-
-    }
-
-    /*******************************************************************************************************************
-     * Drop the currently dragged Piece off at current location
-     * @param field Coordinates of the end field
-     ******************************************************************************************************************/
-    private void drop(XY field) {
-        ui.message("Moved");
-    }
-
-    /*******************************************************************************************************************
      * Choose a Piece to select, or drop off a selected field
      * @param field Coordinates of the clicked field
      ******************************************************************************************************************/
     private void click(XY field) {
-
+        flatBoard.clickOn(field);
     }
 
     /*******************************************************************************************************************

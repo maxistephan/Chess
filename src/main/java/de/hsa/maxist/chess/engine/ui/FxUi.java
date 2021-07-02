@@ -29,6 +29,7 @@ public class FxUi extends Scene implements UI {
     private static int OFFSET;
     private static final Color BLACK = Color.rgb(243, 212, 183);
     private static final Color WHITE = Color.rgb(238, 156, 73);
+    private static XY dragging = null;
 
     private final Canvas boardCanvas;
     private final ListView<Label> messageLabel;
@@ -63,13 +64,14 @@ public class FxUi extends Scene implements UI {
         instance.setOnKeyReleased(e -> instance.lastCmd = new Command(GameCommandType.NONE));
 
         // Mouse events
-        instance.setOnDragDetected(e -> instance.lastCmd = new Command(GameCommandType.DRAG,  new XY((int)e.getX(), (int)e.getY())));
-        instance.setOnMouseReleased(e -> {
-            if(instance.lastCmd.getCommandType() == GameCommandType.DRAG)
-                instance.lastCmd = new Command(GameCommandType.DROP,  new XY((int)e.getX(), (int)e.getY()));
-            else
-                instance.lastCmd = new Command(GameCommandType.CLICK, new XY((int)e.getX(), (int)e.getY()));
-        });
+        instance.setOnDragDetected(e -> instance.lastCmd = new Command(GameCommandType.CLICK,
+                XY.getBoardSpot(new XY((int) e.getX(), (int) e.getY()),
+                        CELL_SIZE,
+                        OFFSET)));
+        instance.setOnMouseReleased(e -> instance.lastCmd = new Command(GameCommandType.CLICK, XY.getBoardSpot(
+                new XY((int)e.getX(), (int)e.getY()),
+                CELL_SIZE,
+                OFFSET)));
         return instance;
     }
 
@@ -136,8 +138,7 @@ public class FxUi extends Scene implements UI {
     @Override
     public Command getInput() {
         Command returnedCmd = lastCmd;
-        if(returnedCmd.getCommandType() != GameCommandType.DRAG)
-            lastCmd = new Command(GameCommandType.NONE);
+        lastCmd = new Command(GameCommandType.NONE);
         return returnedCmd;
     }
 }

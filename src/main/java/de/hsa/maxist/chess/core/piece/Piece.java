@@ -1,6 +1,6 @@
 package de.hsa.maxist.chess.core.piece;
 
-import de.hsa.maxist.chess.core.coordinates.Field;
+import de.hsa.maxist.chess.core.coordinates.XY;
 
 public abstract class Piece {
 
@@ -33,14 +33,15 @@ public abstract class Piece {
 
     /*******************************************************************************************************************
      * Compute all possibillities for this piece
-     * @return Field Array of Possible moves for this Piece
+     * @param view Piece Context for references
+     * @return Coordinate Array of Possible moves for this Piece
      ******************************************************************************************************************/
-    public abstract Field[] getPossibleMoves();
+    public abstract XY[] getPossibleMoves(PieceContext view);
 
     /*******************************************************************************************************************
      * Moves the Piece to given Loaction, if its in the rules
      * @param view BoardView for reference
      * @param destination Destination Field
      ******************************************************************************************************************/
-    public abstract void move(PieceContext view, Field destination);
+    public abstract void move(PieceContext view, XY destination);
 }

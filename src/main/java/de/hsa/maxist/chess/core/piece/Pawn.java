@@ -1,6 +1,7 @@
 package de.hsa.maxist.chess.core.piece;
 
 import de.hsa.maxist.chess.core.coordinates.Field;
+import de.hsa.maxist.chess.core.coordinates.XY;
 
 public class Pawn extends Piece {
     public Pawn(int team) {
@@ -13,12 +14,12 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public Field[] getPossibleMoves() {
-        return new Field[0];
+    public XY[] getPossibleMoves(PieceContext view) {
+        return new XY[0];
     }
 
     @Override
-    public void move(PieceContext view, Field destination) {
+    public void move(PieceContext view, XY destination) {
 
     }
 
