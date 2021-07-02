@@ -3,6 +3,8 @@ package de.hsa.maxist.chess.core.piece;
 import de.hsa.maxist.chess.core.coordinates.Field;
 import de.hsa.maxist.chess.core.coordinates.XY;
 
+import java.util.List;
+
 public interface PieceContext {
 
     /*******************************************************************************************************************
@@ -32,4 +34,16 @@ public interface PieceContext {
      * @param field The chess Board coordinate clicked on
      ******************************************************************************************************************/
     void clickOn(XY field);
+
+    List<XY> possibleMoves(King king, XY position);
+
+    List<XY> possibleMoves(Queen queen, XY position);
+
+    List<XY> possibleMoves(Bishop bishop, XY position);
+
+    List<XY> possibleMoves(Knight knight, XY position);
+
+    List<XY> possibleMoves(Rook rook, XY position);
+
+    List<XY> possibleMoves(Pawn pawn, XY position);
 }

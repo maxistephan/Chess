@@ -1,6 +1,9 @@
 package de.hsa.maxist.chess.core.piece;
 
+import de.hsa.maxist.chess.core.coordinates.Field;
 import de.hsa.maxist.chess.core.coordinates.XY;
+
+import java.util.List;
 
 public abstract class Piece {
 
@@ -36,5 +39,5 @@ public abstract class Piece {
      * @param view Piece Context for references
      * @return Coordinate Array of Possible moves for this Piece
      ******************************************************************************************************************/
-    public abstract XY[] getPossibleMoves(PieceContext view);
+    public abstract List<XY> possibleMoves(PieceContext view, XY xy);
 }

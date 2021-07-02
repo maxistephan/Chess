@@ -1,17 +1,14 @@
 package de.hsa.maxist.chess.engine.ui;
 
-import com.sun.javafx.scene.input.DragboardHelper;
 import de.hsa.maxist.chess.core.board.BoardView;
 import de.hsa.maxist.chess.core.command.Command;
 import de.hsa.maxist.chess.core.command.GameCommandType;
 import de.hsa.maxist.chess.core.coordinates.XY;
 import de.hsa.maxist.chess.core.piece.Piece;
-import de.hsa.maxist.chess.engine.Game;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -27,7 +24,6 @@ import javafx.scene.text.Font;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.net.URL;
 
 
 public class FxUi extends Scene implements UI {
@@ -74,14 +70,17 @@ public class FxUi extends Scene implements UI {
         // --Mouse events
         // Drag start
         instance.setOnDragDetected(e -> {
+            // Adjust Command
             instance.lastCmd = new Command(
                     GameCommandType.CLICK,
                     XY.getBoardSpot(new XY((int) e.getX(), (int) e.getY()),
                             CELL_SIZE,
                             OFFSET));
+            // Set Dragging field
             instance.dragging = XY.getBoardSpot(new XY((int) e.getX(), (int) e.getY()),
                     CELL_SIZE,
                     OFFSET);
+            // init dragboard
             Dragboard dragBoard = instance.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
             content.putString("Wiilkommen zu meiner Schnitzeljagt! Sie haben das Erste Stück gefunden. Das nächste erwartet Sie schon!");
@@ -96,10 +95,12 @@ public class FxUi extends Scene implements UI {
         });
         // drop
         instance.setOnDragDropped(e -> {
+            // init command
             instance.lastCmd = new Command(GameCommandType.CLICK, XY.getBoardSpot(
                     new XY((int)e.getX(), (int)e.getY()),
                     CELL_SIZE,
                     OFFSET));
+            // reset dragging
             instance.dragging = null;
             instance.setCursor(Cursor.DEFAULT);
             e.consume();

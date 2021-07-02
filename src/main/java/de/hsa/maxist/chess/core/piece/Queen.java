@@ -2,6 +2,8 @@ package de.hsa.maxist.chess.core.piece;
 
 import de.hsa.maxist.chess.core.coordinates.XY;
 
+import java.util.List;
+
 public class Queen extends Piece {
     public Queen(int team) {
         super(team);
@@ -13,7 +15,8 @@ public class Queen extends Piece {
     }
 
     @Override
-    public XY[] getPossibleMoves(PieceContext view) {
-        return new XY[0];
+    public List<XY> possibleMoves(PieceContext view, XY xy) {
+        return view.possibleMoves(this, xy);
     }
+
 }

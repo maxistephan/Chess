@@ -55,23 +55,23 @@ public class FlatBoard implements BoardView, PieceContext {
     }
 
     @Override
-    public void clickOn(XY field) {
-        Field clicked = fieldAt(field);
+    public void clickOn(XY clicked) {
+        Field field = fieldAt(clicked);
 
         // if none selected
         if(selectedField == null) {
-            if(clicked.getContent().isPresent())
-                selectedField = clicked;
+            if(field.getContent().isPresent())
+                selectedField = field;
         } else {
             // wanting to move
-            if(possibleMoves.contains(field) || true) {
-                move(selectedField, clicked);
+            if(possibleMoves.contains(clicked)) {
+                move(selectedField, field);
                 selectedField = null;
             // wanting to select another piece
-            } else if(clicked.getContent().isPresent()) {
-                selectedField = selectedField == clicked
+            } else if(field.getContent().isPresent()) {
+                selectedField = selectedField == field
                         ? null // deselect piece
-                        : clicked; // select piece
+                        : field; // select piece
             // wanting to deselect piece
             } else {
                 selectedField = null; // deselect Piece
@@ -81,8 +81,38 @@ public class FlatBoard implements BoardView, PieceContext {
         // configure possible moves
         if(selectedField != null)
             selectedField.getContent().ifPresent(
-                    current -> possibleMoves = Arrays.asList(current.getPossibleMoves(this))
+                    current -> possibleMoves = current.possibleMoves(this, clicked)
             );
+    }
+
+    @Override
+    public List<XY> possibleMoves(King king, XY position) {
+        return null;
+    }
+
+    @Override
+    public List<XY> possibleMoves(Queen queen, XY position) {
+        return null;
+    }
+
+    @Override
+    public List<XY> possibleMoves(Bishop bishop, XY position) {
+        return null;
+    }
+
+    @Override
+    public List<XY> possibleMoves(Knight knight, XY position) {
+        return null;
+    }
+
+    @Override
+    public List<XY> possibleMoves(Rook rook, XY position) {
+        return null;
+    }
+
+    @Override
+    public List<XY> possibleMoves(Pawn pawn, XY position) {
+        return null;
     }
 
     /*******************************************************************************************************************
@@ -94,13 +124,13 @@ public class FlatBoard implements BoardView, PieceContext {
         start.getContent().ifPresent(piece -> {
             if (field.getContent().isPresent())
                 remove(start.getContent().get());
-            start.reset();
-            field.setContent(piece);
+            start.reset(); // remove piece from old Field
+            field.setContent(piece); // set Piece at new Field
         });
     }
 
     /*******************************************************************************************************************
-     * Remove a piece from board
+     * Add a chess piece to the removed ones
      * @param piece the Piece to remove
      ******************************************************************************************************************/
     private void remove(Piece piece) {
