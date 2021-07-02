@@ -18,14 +18,16 @@ public class Game {
     private final UI ui;
     private final long FPS = 25;
     private final State state;
-
-    private Piece selectedPiece = null;
+    private Command userCmd;
 
     public Game(Board board, UI ui){
         this.ui = ui;
         this.state = new State(ui, board);
     }
 
+    /*******************************************************************************************************************
+     * Main-Gameloop
+     ******************************************************************************************************************/
     public void run() {
         new Timer("GameThread").scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -37,6 +39,9 @@ public class Game {
         }, 100, (long) (1000f / FPS));
     }
 
+    /*******************************************************************************************************************
+     * Render
+     ******************************************************************************************************************/
     private void draw() {
         ui.draw(state.flatBoard());
     }
@@ -45,60 +50,13 @@ public class Game {
      * Processes User-Input
      ******************************************************************************************************************/
     private void processInput() {
-        Command command = ui.getInput();
-        GameCommandType commandType = command.getCommandType();
-        if(commandType == GameCommandType.NONE) return;
-
-        Object[] params = command.getParams();
-        Class<?>[] paramTypes = new Class[params.length];
-        for(int i = 0; i < params.length; i++) {
-            paramTypes[i] = params[i].getClass();
-        }
-
-        try {
-            Method m = getClass().getDeclaredMethod(commandType.name().toLowerCase(Locale.ENGLISH), paramTypes);
-            m.invoke(this, params);
-        } catch(NoSuchMethodException | SecurityException | InvocationTargetException | IllegalArgumentException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        userCmd = ui.getInput();
     }
 
     /*******************************************************************************************************************
      * Update State
      ******************************************************************************************************************/
     private void update() {
-        state.update();
+        state.update(userCmd);
     }
-
-    /*******************************************************************************************************************
-     * Drag the Piece on the field with given coordinates
-     * @param field Coordinates of the dragged field
-     ******************************************************************************************************************/
-    private void drag(XY field) {
-
-    }
-
-    /*******************************************************************************************************************
-     * Drop the currently dragged Piece off at current location
-     * @param field Coordinates of the end field
-     ******************************************************************************************************************/
-    private void drop(XY field) {
-
-    }
-
-    /*******************************************************************************************************************
-     * Choose a Piece to select, or drop off a selected field
-     * @param field Coordinates of the clicked field
-     ******************************************************************************************************************/
-    private void click(XY field) {
-
-    }
-
-    /*******************************************************************************************************************
-     * Open the pause menu
-     ******************************************************************************************************************/
-    private void pause() {
-
-    }
-
 }

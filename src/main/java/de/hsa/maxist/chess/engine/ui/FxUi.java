@@ -5,6 +5,7 @@ import de.hsa.maxist.chess.core.command.Command;
 import de.hsa.maxist.chess.core.command.GameCommandType;
 import de.hsa.maxist.chess.core.coordinates.XY;
 import de.hsa.maxist.chess.core.piece.Piece;
+import de.hsa.maxist.chess.engine.Game;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -134,18 +135,9 @@ public class FxUi extends Scene implements UI {
 
     @Override
     public Command getInput() {
-        return interpretInput();
-    }
-
-    /*******************************************************************************************************************
-     * Interpreting user input to generate command
-     * @return interpreted command
-     ******************************************************************************************************************/
-    private Command interpretInput() {
-//        System.out.print("GameCommandType " + lastCmd.getCommandType() + "\nParams: ");
-//        for(Object o : lastCmd.getParams()) System.out.print(o + "; ");
-//        System.out.println();
-
-        return lastCmd;
+        Command returnedCmd = lastCmd;
+        if(returnedCmd.getCommandType() != GameCommandType.DRAG)
+            lastCmd = new Command(GameCommandType.NONE);
+        return returnedCmd;
     }
 }
