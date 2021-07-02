@@ -87,32 +87,32 @@ public class FlatBoard implements BoardView, PieceContext {
 
     @Override
     public List<XY> possibleMoves(King king, XY position) {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
     public List<XY> possibleMoves(Queen queen, XY position) {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
     public List<XY> possibleMoves(Bishop bishop, XY position) {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
     public List<XY> possibleMoves(Knight knight, XY position) {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
     public List<XY> possibleMoves(Rook rook, XY position) {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
     public List<XY> possibleMoves(Pawn pawn, XY position) {
-        return null;
+        return new ArrayList<>();
     }
 
     /*******************************************************************************************************************
