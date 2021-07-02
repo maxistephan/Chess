@@ -10,6 +10,11 @@ public class FenInterpreter {
 
     public static final String DEFAULT_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
+    /*******************************************************************************************************************
+     * Calculates a chess board Array for given Forsyth-Edwards-Notated String
+     * @param fen Forsyth-Edwards String
+     * @return Field Array of Forsyth-Edwards-Notation
+     ******************************************************************************************************************/
     public static Field[][] decode(String fen) {
         Field[][] board = new Field[8][8];
 
@@ -53,6 +58,11 @@ public class FenInterpreter {
         return board;
     }
 
+    /*******************************************************************************************************************
+     * Calculates a Forsyth-Edwards-Notated String for given chess board Array
+     * @param board 2 Dimensional Chess board with 0/0 as the upper left and 7/7 as the lower right corner
+     * @return Forsyth-Edwards Notation of given board
+     ******************************************************************************************************************/
     public static String encode(Field[][] board) {
         StringBuilder sb = new StringBuilder();
         int cnt = 0;

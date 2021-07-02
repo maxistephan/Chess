@@ -18,6 +18,10 @@ public class Board {
         return this.board;
     }
 
+    /*******************************************************************************************************************
+     * Converts the current Board array into a FlatBoard
+     * @return FlatBoard of current board Array
+     ******************************************************************************************************************/
     public FlatBoard flatten() {
         return new FlatBoard(board);
     }

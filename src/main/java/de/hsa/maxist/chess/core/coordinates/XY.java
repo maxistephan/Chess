@@ -10,9 +10,45 @@ public final class XY {
         this.y = y;
     }
 
+    /*******************************************************************************************************************
+     * Adds this with another vector
+     * @param a vector to add to this
+     * @return addition of this + a
+     ******************************************************************************************************************/
+    public XY plus(XY a) {
+        return new XY(a.x + x, a.y + y);
+    }
+
+    /*******************************************************************************************************************
+     * Subtracts the given vector from this
+     * @param a vector to be substracted from this
+     * @return subtraction of this - a
+     ******************************************************************************************************************/
+    public XY minus(XY a) {
+        return new XY(x - a.x, y - a.y);
+    }
+
+    /*******************************************************************************************************************
+     * Negates the current values
+     * @return negated vector of this
+     ******************************************************************************************************************/
+    public XY negate() {
+        return new XY(-x, -y);
+    }
+
+    /*******************************************************************************************************************
+     * Computes the Spot of the field clicked from raw coordinates
+     * @param clicked the coordinates of the mouse clicked event
+     * @param cellSize size of one chess square
+     * @param offset offset from the top left corner
+     * @return position on Board
+     ******************************************************************************************************************/
+    public static XY getBoardSpot(XY clicked, int cellSize, int offset) {
+        return new XY((clicked.x - offset) / cellSize + 1, (clicked.y - offset) / cellSize + 1);
+    }
+
     @Override
     public String toString() {
         return String.format("X: %d, Y: %d", x, y);
     }
-
 }

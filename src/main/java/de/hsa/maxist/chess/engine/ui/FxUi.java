@@ -41,9 +41,11 @@ public class FxUi extends Scene implements UI {
         this.messageLabel.setItems(messages);
     }
 
+    /*******************************************************************************************************************
+     * Create a ui instance
+     ******************************************************************************************************************/
     public static FxUi createInstance() {
         BorderPane root = new BorderPane();
-
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
         CELL_SIZE = Math.min(size.height, size.width) / 10;
 
@@ -54,15 +56,18 @@ public class FxUi extends Scene implements UI {
         root.setRight(listView);
 
         FxUi instance = new FxUi(root, canvas, listView);
+
+        // Keyboard events
         instance.setOnKeyPressed(e -> instance.lastCmd = new Command(GameCommandType.NONE));
         instance.setOnKeyReleased(e -> instance.lastCmd = new Command(GameCommandType.NONE));
 
-        instance.setOnDragDetected(e -> instance.lastCmd = new Command(GameCommandType.DRAG, e.getX(), e.getY()));
+        // Mouse events
+        instance.setOnDragDetected(e -> instance.lastCmd = new Command(GameCommandType.DRAG,  new XY((int)e.getX(), (int)e.getY())));
         instance.setOnMouseReleased(e -> {
             if(instance.lastCmd.getCommandType() == GameCommandType.DRAG)
-                instance.lastCmd = new Command(GameCommandType.DROP, e.getX(), e.getY());
+                instance.lastCmd = new Command(GameCommandType.DROP,  new XY((int)e.getX(), (int)e.getY()));
             else
-                instance.lastCmd = new Command(GameCommandType.CLICK, e.getX(), e.getY());
+                instance.lastCmd = new Command(GameCommandType.CLICK, new XY((int)e.getX(), (int)e.getY()));
         });
         return instance;
     }
@@ -77,6 +82,10 @@ public class FxUi extends Scene implements UI {
         Platform.runLater(() -> messages.add(new Label(message)));
     }
 
+    /*******************************************************************************************************************
+     * Redraws this board canvas
+     * @param view Board view for reference
+     ******************************************************************************************************************/
     private void redrawBoardCanvas(BoardView view) {
         OFFSET = CELL_SIZE / 2;
 
@@ -94,6 +103,10 @@ public class FxUi extends Scene implements UI {
         }
     }
 
+    /*******************************************************************************************************************
+     * Drawing the Chess Board onto a canvas
+     * @param gc Graphics Context of the Canvas to draw on
+     ******************************************************************************************************************/
     private void drawBoard(GraphicsContext gc) {
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, boardCanvas.getWidth(), boardCanvas.getHeight());
@@ -124,10 +137,14 @@ public class FxUi extends Scene implements UI {
         return interpretInput();
     }
 
+    /*******************************************************************************************************************
+     * Interpreting user input to generate command
+     * @return interpreted command
+     ******************************************************************************************************************/
     private Command interpretInput() {
-        System.out.print("GameCommandType " + lastCmd.getCommandType() + "\nParams: ");
-        for(Object o : lastCmd.getParams()) System.out.print(o + " ");
-        System.out.println();
+//        System.out.print("GameCommandType " + lastCmd.getCommandType() + "\nParams: ");
+//        for(Object o : lastCmd.getParams()) System.out.print(o + "; ");
+//        System.out.println();
 
         return lastCmd;
     }
