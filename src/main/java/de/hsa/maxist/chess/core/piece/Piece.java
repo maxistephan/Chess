@@ -37,11 +37,4 @@ public abstract class Piece {
      * @return Coordinate Array of Possible moves for this Piece
      ******************************************************************************************************************/
     public abstract XY[] getPossibleMoves(PieceContext view);
-
-    /*******************************************************************************************************************
-     * Moves the Piece to given Loaction, if its in the rules
-     * @param view BoardView for reference
-     * @param destination Destination Field
-     ******************************************************************************************************************/
-    public abstract void move(PieceContext view, XY destination);
 }

@@ -1,5 +1,6 @@
 package de.hsa.maxist.chess.engine.ui;
 
+import com.sun.javafx.scene.input.DragboardHelper;
 import de.hsa.maxist.chess.core.board.BoardView;
 import de.hsa.maxist.chess.core.command.Command;
 import de.hsa.maxist.chess.core.command.GameCommandType;
@@ -9,18 +10,24 @@ import de.hsa.maxist.chess.engine.Game;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.net.URL;
 
 
 public class FxUi extends Scene implements UI {
@@ -29,8 +36,9 @@ public class FxUi extends Scene implements UI {
     private static int OFFSET;
     private static final Color BLACK = Color.rgb(243, 212, 183);
     private static final Color WHITE = Color.rgb(238, 156, 73);
-    private static XY dragging = null;
 
+    private XY dragging = null;
+    private XY cursorPos = null;
     private final Canvas boardCanvas;
     private final ListView<Label> messageLabel;
     private Command lastCmd = new Command(GameCommandType.NONE);
@@ -59,19 +67,44 @@ public class FxUi extends Scene implements UI {
 
         FxUi instance = new FxUi(root, canvas, listView);
 
-        // Keyboard events
+        // --Keyboard events
         instance.setOnKeyPressed(e -> instance.lastCmd = new Command(GameCommandType.NONE));
         instance.setOnKeyReleased(e -> instance.lastCmd = new Command(GameCommandType.NONE));
 
-        // Mouse events
-        instance.setOnDragDetected(e -> instance.lastCmd = new Command(GameCommandType.CLICK,
-                XY.getBoardSpot(new XY((int) e.getX(), (int) e.getY()),
-                        CELL_SIZE,
-                        OFFSET)));
-        instance.setOnMouseReleased(e -> instance.lastCmd = new Command(GameCommandType.CLICK, XY.getBoardSpot(
-                new XY((int)e.getX(), (int)e.getY()),
-                CELL_SIZE,
-                OFFSET)));
+        // --Mouse events
+        // Drag start
+        instance.setOnDragDetected(e -> {
+            instance.lastCmd = new Command(
+                    GameCommandType.CLICK,
+                    XY.getBoardSpot(new XY((int) e.getX(), (int) e.getY()),
+                            CELL_SIZE,
+                            OFFSET));
+            instance.dragging = XY.getBoardSpot(new XY((int) e.getX(), (int) e.getY()),
+                    CELL_SIZE,
+                    OFFSET);
+            Dragboard dragBoard = instance.startDragAndDrop(TransferMode.MOVE);
+            ClipboardContent content = new ClipboardContent();
+            content.putString("Wiilkommen zu meiner Schnitzeljagt! Sie haben das Erste Stück gefunden. Das nächste erwartet Sie schon!");
+            dragBoard.setContent(content);
+            instance.setCursor(Cursor.CLOSED_HAND);
+        });
+        // drag over
+        instance.setOnDragOver(e -> {
+            e.acceptTransferModes(TransferMode.ANY);
+            instance.setCursor(Cursor.CLOSED_HAND);
+            instance.cursorPos = new XY((int) e.getX(), (int)e.getY());
+        });
+        // drop
+        instance.setOnDragDropped(e -> {
+            instance.lastCmd = new Command(GameCommandType.CLICK, XY.getBoardSpot(
+                    new XY((int)e.getX(), (int)e.getY()),
+                    CELL_SIZE,
+                    OFFSET));
+            instance.dragging = null;
+            instance.setCursor(Cursor.DEFAULT);
+            e.consume();
+        });
+
         return instance;
     }
 
@@ -100,8 +133,15 @@ public class FxUi extends Scene implements UI {
         for(int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
                 Piece piece = view.getPieceAt(new XY(i, j));
-                if(piece != null)
-                    gc.fillText(String.valueOf(piece.getChar()), i * CELL_SIZE + OFFSET, (j + 1) * CELL_SIZE + OFFSET);
+                if(piece != null) {
+                    if(dragging != null && cursorPos != null && i == dragging.x && j == dragging.y) {
+                        gc.setFill(Color.rgb(50, 50, 50, 0.5));
+                        gc.fillText(String.valueOf(piece.getChar()), cursorPos.x + 5, cursorPos.y - 5); // Shadow
+                        gc.setFill(Color.rgb(0, 0, 0, 1));
+                        gc.fillText(String.valueOf(piece.getChar()), cursorPos.x, cursorPos.y); // Dragged Piece
+                    } else
+                        gc.fillText(String.valueOf(piece.getChar()), i * CELL_SIZE + OFFSET, (j + 1) * CELL_SIZE + OFFSET); // Other Pieces
+                }
             }
         }
     }

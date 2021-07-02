@@ -6,46 +6,25 @@ import de.hsa.maxist.chess.core.coordinates.XY;
 public interface PieceContext {
 
     /*******************************************************************************************************************
-     * Try To move this King to its destination, observing the rules
-     * @param king King to move
-     * @param dest Deistionation Field
+     * Get Field at position
+     * @param xy position (e.g. 0/0 for top left, 7/7 for bottom right)
+     * @return Field at position
      ******************************************************************************************************************/
-    void tryMove(King king, XY dest);
+    Field fieldAt(XY xy);
 
     /*******************************************************************************************************************
-     * Try To move this Queen to its destination, observing the rules
-     * @param queen Queen to move
-     * @param dest Deistionation Field
+     * Find out if the Field at a certain position is empty or not
+     * @param xy Field to be tested
+     * @return bool value of field being empty or not
      ******************************************************************************************************************/
-    void tryMove(Queen queen, XY dest);
+    boolean isEmpty(XY xy);
 
     /*******************************************************************************************************************
-     * Try To move this Bishop to its destination, observing the rules
-     * @param bishop Bishop to move
-     * @param dest Deistionation Field
+     * Get Piece at position
+     * @param xy position (e.g. 0/0 for top left, 8/8 for bottom right)
+     * @return Piece at position
      ******************************************************************************************************************/
-    void tryMove(Bishop bishop, XY dest);
-
-    /*******************************************************************************************************************
-     * Try To move this Knight to its destination, observing the rules
-     * @param knight Knight to move
-     * @param dest Deistionation Field
-     ******************************************************************************************************************/
-    void tryMove(Knight knight, XY dest);
-
-    /*******************************************************************************************************************
-     * Try To move this Rook to its destination, observing the rules
-     * @param rook Rook to move
-     * @param dest Deistionation Field
-     ******************************************************************************************************************/
-    void tryMove(Rook rook, XY dest);
-
-    /*******************************************************************************************************************
-     * Try To move this Pawn to its destination, observing the rules
-     * @param pawn Pawn to move
-     * @param dest Deistionation Field
-     ******************************************************************************************************************/
-    void tryMove(Pawn pawn, XY dest);
+    Piece getPieceAt(XY xy);
 
     /*******************************************************************************************************************
      * Clicking on any Field triggers an action. Clicking on chess pieces display their possible moves, nothingness

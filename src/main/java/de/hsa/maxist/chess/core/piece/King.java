@@ -1,6 +1,5 @@
 package de.hsa.maxist.chess.core.piece;
 
-import de.hsa.maxist.chess.core.coordinates.Field;
 import de.hsa.maxist.chess.core.coordinates.XY;
 
 public class King extends Piece {
@@ -16,10 +15,5 @@ public class King extends Piece {
     @Override
     public XY[] getPossibleMoves(PieceContext view) {
         return new XY[0];
-    }
-
-    @Override
-    public void move(PieceContext view, XY destination) {
-
     }
 }

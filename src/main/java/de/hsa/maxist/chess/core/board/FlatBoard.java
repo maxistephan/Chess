@@ -4,16 +4,15 @@ import de.hsa.maxist.chess.core.coordinates.Field;
 import de.hsa.maxist.chess.core.coordinates.XY;
 import de.hsa.maxist.chess.core.piece.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class FlatBoard implements BoardView, PieceContext {
 
     private Field[] flatboard = new Field[64];
     private List<XY> possibleMoves = new ArrayList<>();
-    private Piece selectedPiece = null;
+    private Field selectedField = null;
+    private List<Piece> removed = new ArrayList<>();
 
     public FlatBoard(Field[][] board) {
         for(int i = 0; i < board.length; i++) {
@@ -38,67 +37,73 @@ public class FlatBoard implements BoardView, PieceContext {
 
     @Override
     public Piece getPieceAt(XY field) {
-        if(flatboard[field.x + 8 * field.y].getContent().isPresent()) {
-            return flatboard[field.x + 8 * field.y].getContent().get();
+        if(fieldAt(field).getContent().isPresent()) {
+            return fieldAt(field).getContent().get();
         } else {
             return null;
         }
     }
 
     @Override
-    public void tryMove(King king, XY dest) {
-
+    public Field fieldAt(XY xy) {
+        return flatboard[xy.x + xy.y * 8];
     }
 
     @Override
-    public void tryMove(Queen queen, XY dest) {
-
-    }
-
-    @Override
-    public void tryMove(Bishop bishop, XY dest) {
-
-    }
-
-    @Override
-    public void tryMove(Knight knight, XY dest) {
-
-    }
-
-    @Override
-    public void tryMove(Rook rook, XY dest) {
-
-    }
-
-    @Override
-    public void tryMove(Pawn pawn, XY dest) {
-
+    public boolean isEmpty(XY xy) {
+        return getFieldAt(xy).getContent().isEmpty();
     }
 
     @Override
     public void clickOn(XY field) {
-        Field clicked = flatboard[field.x + 8 * field.y];
+        Field clicked = fieldAt(field);
 
         // if none selected
-        if(selectedPiece == null) {
+        if(selectedField == null) {
             if(clicked.getContent().isPresent())
-                selectedPiece = clicked.getContent().get();
+                selectedField = clicked;
         } else {
-            // if wanting to move
-            if(possibleMoves.contains(field)) {
-                selectedPiece.move(this, field); // move
-            // if wanting to select another piece
+            // wanting to move
+            if(possibleMoves.contains(field) || true) {
+                move(selectedField, clicked);
+                selectedField = null;
+            // wanting to select another piece
             } else if(clicked.getContent().isPresent()) {
-                selectedPiece = selectedPiece == clicked.getContent().get()
+                selectedField = selectedField == clicked
                         ? null // deselect piece
-                        : clicked.getContent().get(); // select piece
+                        : clicked; // select piece
+            // wanting to deselect piece
             } else {
-                selectedPiece = null; // deselect Piece
+                selectedField = null; // deselect Piece
             }
         }
 
-        possibleMoves = selectedPiece == null
-                ? new ArrayList<>()
-                : Arrays.asList(selectedPiece.getPossibleMoves(this));
+        // configure possible moves
+        if(selectedField != null)
+            selectedField.getContent().ifPresent(
+                    current -> possibleMoves = Arrays.asList(current.getPossibleMoves(this))
+            );
+    }
+
+    /*******************************************************************************************************************
+     * Move a piece on the chess board
+     * @param start Field with the Piece to move
+     * @param field the field to move the piece to
+     ******************************************************************************************************************/
+    private void move(Field start, Field field) {
+        start.getContent().ifPresent(piece -> {
+            if (field.getContent().isPresent())
+                remove(start.getContent().get());
+            start.reset();
+            field.setContent(piece);
+        });
+    }
+
+    /*******************************************************************************************************************
+     * Remove a piece from board
+     * @param piece the Piece to remove
+     ******************************************************************************************************************/
+    private void remove(Piece piece) {
+        removed.add(piece);
     }
 }

@@ -51,4 +51,11 @@ public final class XY {
     public String toString() {
         return String.format("X: %d, Y: %d", x, y);
     }
+
+    @Override
+    public boolean equals(Object equals) {
+        if(equals instanceof XY)
+            return ((XY) equals).x == x && ((XY) equals).y == y;
+        return false;
+    }
 }

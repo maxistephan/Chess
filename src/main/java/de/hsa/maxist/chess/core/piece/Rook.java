@@ -16,9 +16,4 @@ public class Rook extends Piece {
     public XY[] getPossibleMoves(PieceContext view) {
         return new XY[0];
     }
-
-    @Override
-    public void move(PieceContext view, XY destination) {
-        view.tryMove(this, destination);
-    }
 }
