@@ -64,7 +64,7 @@ public class FlatBoard implements BoardView, PieceContext {
                 selectedField = field;
         } else {
             // wanting to move
-            if(possibleMoves.contains(clicked)) {
+            if(possibleMoves.contains(clicked) || true) {
                 move(selectedField, field);
                 selectedField = null;
             // wanting to select another piece

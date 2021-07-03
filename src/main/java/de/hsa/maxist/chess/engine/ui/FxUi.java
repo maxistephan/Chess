@@ -1,5 +1,7 @@
 package de.hsa.maxist.chess.engine.ui;
 
+import static de.hsa.maxist.chess.engine.ui.SpriteLoader.*;
+
 import de.hsa.maxist.chess.core.board.BoardView;
 import de.hsa.maxist.chess.core.command.Command;
 import de.hsa.maxist.chess.core.command.GameCommandType;
@@ -24,6 +26,7 @@ import javafx.scene.text.Font;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.Locale;
 
 
 public class FxUi extends Scene implements UI {
@@ -81,7 +84,7 @@ public class FxUi extends Scene implements UI {
                     CELL_SIZE,
                     OFFSET);
             // init dragboard
-            Dragboard dragBoard = instance.startDragAndDrop(TransferMode.MOVE);
+            Dragboard dragBoard = instance.startDragAndDrop(TransferMode.ANY);
             ClipboardContent content = new ClipboardContent();
             content.putString("Wiilkommen zu meiner Schnitzeljagt! Sie haben das Erste Stück gefunden. Das nächste erwartet Sie schon!");
             dragBoard.setContent(content);
@@ -136,12 +139,17 @@ public class FxUi extends Scene implements UI {
                 Piece piece = view.getPieceAt(new XY(i, j));
                 if(piece != null) {
                     if(dragging != null && cursorPos != null && i == dragging.x && j == dragging.y) {
-                        gc.setFill(Color.rgb(50, 50, 50, 0.5));
-                        gc.fillText(String.valueOf(piece.getChar()), cursorPos.x + 5, cursorPos.y - 5); // Shadow
-                        gc.setFill(Color.rgb(0, 0, 0, 1));
-                        gc.fillText(String.valueOf(piece.getChar()), cursorPos.x, cursorPos.y); // Dragged Piece
+                        gc.drawImage(SpriteLoader.valueOf(piece.getClass().getSimpleName().toUpperCase(Locale.ENGLISH)).getSprite(piece.getTeam()),
+                                cursorPos.x - (float)CELL_SIZE/2,
+                                cursorPos.y - (float)CELL_SIZE/2,
+                                CELL_SIZE,
+                                CELL_SIZE); // Dragged Piece
                     } else
-                        gc.fillText(String.valueOf(piece.getChar()), i * CELL_SIZE + OFFSET, (j + 1) * CELL_SIZE + OFFSET); // Other Pieces
+                        gc.drawImage(SpriteLoader.valueOf(piece.getClass().getSimpleName().toUpperCase(Locale.ENGLISH)).getSprite(piece.getTeam()),
+                                i * CELL_SIZE + OFFSET,
+                                j * CELL_SIZE + OFFSET,
+                                CELL_SIZE,
+                                CELL_SIZE); // Other Pieces
                 }
             }
         }
