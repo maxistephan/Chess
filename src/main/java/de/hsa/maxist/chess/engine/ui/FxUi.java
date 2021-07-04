@@ -38,7 +38,7 @@ public class FxUi extends Scene implements UI {
     private Command lastCmd = new Command(GameCommandType.NONE);
     private ObservableList<Label> messages = FXCollections.observableArrayList();
 
-    private FxUi(Parent parent, Canvas boardCanvas, ListView<Label> messageLabel) {
+    private FxUi(Parent parent, Canvas boardCanvas, Canvas deletedPieces, ListView<Label> messageLabel) {
         super(parent);
         this.boardCanvas = boardCanvas;
         this.messageLabel = messageLabel;
@@ -53,13 +53,15 @@ public class FxUi extends Scene implements UI {
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
         CELL_SIZE = Math.min(size.height, size.width) / 10;
 
-        Canvas canvas = new Canvas(CELL_SIZE * 9, CELL_SIZE * 9);
         ListView<Label> listView = new ListView<>();
+        Canvas canvas = new Canvas(CELL_SIZE * 9, CELL_SIZE * 9);
+        Canvas deletedPieces = new Canvas(CELL_SIZE * 3, CELL_SIZE * 9);
 
+        root.setLeft(deletedPieces);
         root.setCenter(canvas);
         root.setRight(listView);
 
-        FxUi instance = new FxUi(root, canvas, listView);
+        FxUi instance = new FxUi(root, canvas, deletedPieces, listView);
 
         // --Keyboard events
         instance.setOnKeyPressed(e -> instance.lastCmd = new Command(GameCommandType.NONE));
