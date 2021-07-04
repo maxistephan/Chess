@@ -81,7 +81,6 @@ public class FxUi extends Scene implements UI {
         });
 
         instance.setOnMouseReleased(e -> {
-            instance.message("Drag Released");
             instance.lastCmd = new Command(
                     GameCommandType.CLICK,
                     XY.getBoardSpot(
@@ -92,46 +91,6 @@ public class FxUi extends Scene implements UI {
             instance.setCursor(Cursor.DEFAULT);
             e.consume();
         });
-
-//        // --Mouse events
-//        // Drag start
-//        instance.setOnDragDetected(e -> {
-//            // Adjust Command
-//            instance.lastCmd = new Command(
-//                    GameCommandType.CLICK,
-//                    XY.getBoardSpot(new XY((int) e.getX(), (int) e.getY()),
-//                            CELL_SIZE,
-//                            OFFSET));
-//            // Set Dragging field
-//            instance.dragging = XY.getBoardSpot(new XY((int) e.getX(), (int) e.getY()),
-//                    CELL_SIZE,
-//                    OFFSET);
-//            // init dragboard
-//            Dragboard dragBoard = instance.startDragAndDrop(TransferMode.ANY);
-//            dragBoard.setDragView(null);
-//            ClipboardContent content = new ClipboardContent();
-//            content.putString("Wiilkommen zu meiner Schnitzeljagt! Sie haben das Erste Stück gefunden. Das nächste erwartet Sie schon!");
-//            dragBoard.setContent(content);
-//            instance.setCursor(Cursor.CLOSED_HAND);
-//        });
-//        // drag over
-//        instance.setOnDragOver(e -> {
-//            e.acceptTransferModes(TransferMode.ANY);
-//            instance.setCursor(Cursor.CLOSED_HAND);
-//            instance.cursorPos = new XY((int) e.getX(), (int)e.getY());
-//        });
-//        // drop
-//        instance.setOnDragDropped(e -> {
-//            // init command
-//            instance.lastCmd = new Command(GameCommandType.CLICK, XY.getBoardSpot(
-//                    new XY((int)e.getX(), (int)e.getY()),
-//                    CELL_SIZE,
-//                    OFFSET));
-//            // reset dragging
-//            instance.dragging = null;
-//            instance.setCursor(Cursor.DEFAULT);
-//            e.consume();
-//        });
 
         return instance;
     }
