@@ -35,15 +35,15 @@ public interface PieceContext {
      ******************************************************************************************************************/
     void clickOn(XY field);
 
-    List<XY> possibleMoves(King king, XY position);
+    List<Field> possibleMoves(King king, XY position, int depth);
 
-    List<XY> possibleMoves(Queen queen, XY position);
+    List<Field> possibleMoves(Queen queen, XY position, int depth);
 
-    List<XY> possibleMoves(Bishop bishop, XY position);
+    List<Field> possibleMoves(Bishop bishop, XY position, int depth);
 
-    List<XY> possibleMoves(Knight knight, XY position);
+    List<Field> possibleMoves(Knight knight, XY position, int depth);
 
-    List<XY> possibleMoves(Rook rook, XY position);
+    List<Field> possibleMoves(Rook rook, XY position, int depth);
 
-    List<XY> possibleMoves(Pawn pawn, XY position);
+    List<Field> possibleMoves(Pawn pawn, XY position, int depth);
 }

@@ -37,7 +37,8 @@ public abstract class Piece {
     /*******************************************************************************************************************
      * Compute all possibillities for this piece
      * @param view Piece Context for references
+     * @param xy Position
      * @return Coordinate Array of Possible moves for this Piece
      ******************************************************************************************************************/
-    public abstract List<XY> possibleMoves(PieceContext view, XY xy);
+    public abstract List<Field> possibleMoves(PieceContext view, XY xy, int depth);
 }

@@ -10,14 +10,18 @@ import java.util.function.Consumer;
 public class FlatBoard implements BoardView, PieceContext {
 
     private Field[] flatboard = new Field[64];
-    private List<XY> possibleMoves = new ArrayList<>();
+    private final Board board;
+    private List<Field> possibleMoves = new ArrayList<>();
     private Field selectedField = null;
     private List<Piece> removed = new ArrayList<>();
 
-    public FlatBoard(Field[][] board) {
-        for(int i = 0; i < board.length; i++) {
-            for(int j = 0; j < board[0].length; j++) {
-                flatboard[i + board[0].length * j] = board[j][i];
+    boolean[] check = new boolean[]{false, false};
+
+    public FlatBoard(Board board) {
+        this.board = board;
+        for(int i = 0; i < 8; i++) {
+            for(int j = 0; j < 8; j++) {
+                flatboard[i + 8 * j] = board.getBoard()[j][i];
             }
         }
     }
@@ -80,38 +84,79 @@ public class FlatBoard implements BoardView, PieceContext {
 
         // configure possible moves
         if(selectedField != null)
-            selectedField.getContent().ifPresent(
-                    current -> possibleMoves = current.possibleMoves(this, clicked)
+            selectedField.getContent().ifPresentOrElse(
+                    current -> possibleMoves = current.possibleMoves(this, clicked, 2), // if
+                    () -> possibleMoves = new ArrayList<>()                                         // else
             );
     }
 
     @Override
-    public List<XY> possibleMoves(King king, XY position) {
+    public List<Field> possibleMoves(King king, XY position, int depth) {
+        if(depth == 0)
+            return new ArrayList<>();
         return new ArrayList<>();
     }
 
     @Override
-    public List<XY> possibleMoves(Queen queen, XY position) {
+    public List<Field> possibleMoves(Queen queen, XY position, int depth) {
+
+        ArrayList<Field> moves = new ArrayList<>();
+        if(depth == 0)
+            return moves;
+
+        if(check[queen.getTeam()])
+
+        // upper half
+        for(int j = 7; j < 10; j++) {
+            for (int i = position.x + 8 * position.y; i < 64; i += j) {
+                if (flatboard[i].getContent().isPresent()) {
+                    if (flatboard[i].getContent().get().getTeam() != queen.getTeam())
+                        moves.add(flatboard[i]);
+                    break;
+                }
+            }
+        }
+
+        // lower half
+        for(int j = 7; j < 10; j++) {
+            for (int i = position.x + 8 * position.y; i > 0; i -= j) {
+                if (flatboard[i].getContent().isPresent()) {
+                    if (flatboard[i].getContent().get().getTeam() != queen.getTeam())
+                        moves.add(flatboard[i]);
+                    break;
+                }
+            }
+        }
+
+        return moves;
+    }
+
+    @Override
+    public List<Field> possibleMoves(Bishop bishop, XY position, int depth) {
+        if(depth == 0)
+            return new ArrayList<>();
         return new ArrayList<>();
     }
 
     @Override
-    public List<XY> possibleMoves(Bishop bishop, XY position) {
+    public List<Field> possibleMoves(Knight knight, XY position, int depth) {
+        if(depth == 0)
+            return new ArrayList<>();
         return new ArrayList<>();
     }
 
     @Override
-    public List<XY> possibleMoves(Knight knight, XY position) {
+    public List<Field> possibleMoves(Rook rook, XY position, int depth) {
+        if(depth == 0)
+            return new ArrayList<>();
         return new ArrayList<>();
     }
 
     @Override
-    public List<XY> possibleMoves(Rook rook, XY position) {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<XY> possibleMoves(Pawn pawn, XY position) {
+    public List<Field> possibleMoves(Pawn pawn, XY position, int depth) {
+        int dir = pawn.getTeam() == Piece.WHITE ? 1 : -1;
+        if(depth == 0)
+            return new ArrayList<>();
         return new ArrayList<>();
     }
 

@@ -43,6 +43,33 @@ public class FxUi extends Scene implements UI {
         this.boardCanvas = boardCanvas;
         this.messageLabel = messageLabel;
         this.messageLabel.setItems(messages);
+
+        boardCanvas.setOnMouseDragged(e -> {
+            if(dragging == null) {
+                lastCmd = new Command(
+                        GameCommandType.CLICK,
+                        XY.getBoardSpot(new XY((int) e.getX(), (int) e.getY()),
+                                CELL_SIZE,
+                                OFFSET));
+                dragging = XY.getBoardSpot(new XY((int) e.getX(), (int) e.getY()),
+                        CELL_SIZE,
+                        OFFSET);
+            }
+            cursorPos = new XY((int) e.getX(), (int) e.getY());
+            setCursor(Cursor.CLOSED_HAND);
+        });
+
+        boardCanvas.setOnMouseReleased(e -> {
+            lastCmd = new Command(
+                    GameCommandType.CLICK,
+                    XY.getBoardSpot(
+                            new XY((int)e.getX(), (int)e.getY()),
+                            CELL_SIZE,
+                            OFFSET));
+            dragging = null;
+            setCursor(Cursor.DEFAULT);
+            e.consume();
+        });
     }
 
     /*******************************************************************************************************************
@@ -61,40 +88,8 @@ public class FxUi extends Scene implements UI {
         root.setCenter(canvas);
         root.setRight(listView);
 
-        FxUi instance = new FxUi(root, canvas, deletedPieces, listView);
+        return new FxUi(root, canvas, deletedPieces, listView);
 
-        // --Keyboard events
-        instance.setOnKeyPressed(e -> instance.lastCmd = new Command(GameCommandType.NONE));
-        instance.setOnKeyReleased(e -> instance.lastCmd = new Command(GameCommandType.NONE));
-
-        instance.setOnMouseDragged(e -> {
-            if(instance.dragging == null) {
-                instance.lastCmd = new Command(
-                        GameCommandType.CLICK,
-                                XY.getBoardSpot(new XY((int) e.getX(), (int) e.getY()),
-                                        CELL_SIZE,
-                                        OFFSET));
-                instance.dragging = XY.getBoardSpot(new XY((int) e.getX(), (int) e.getY()),
-                        CELL_SIZE,
-                        OFFSET);
-            }
-            instance.cursorPos = new XY((int) e.getX(), (int) e.getY());
-            instance.setCursor(Cursor.CLOSED_HAND);
-        });
-
-        instance.setOnMouseReleased(e -> {
-            instance.lastCmd = new Command(
-                    GameCommandType.CLICK,
-                    XY.getBoardSpot(
-                            new XY((int)e.getX(), (int)e.getY()),
-                            CELL_SIZE,
-                            OFFSET));
-            instance.dragging = null;
-            instance.setCursor(Cursor.DEFAULT);
-            e.consume();
-        });
-
-        return instance;
     }
 
     @Override
