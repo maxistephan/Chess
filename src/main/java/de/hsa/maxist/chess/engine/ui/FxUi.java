@@ -1,7 +1,5 @@
 package de.hsa.maxist.chess.engine.ui;
 
-import static de.hsa.maxist.chess.engine.ui.SpriteLoader.*;
-
 import de.hsa.maxist.chess.core.board.BoardView;
 import de.hsa.maxist.chess.core.command.Command;
 import de.hsa.maxist.chess.core.command.GameCommandType;
@@ -17,9 +15,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -70,44 +65,73 @@ public class FxUi extends Scene implements UI {
         instance.setOnKeyPressed(e -> instance.lastCmd = new Command(GameCommandType.NONE));
         instance.setOnKeyReleased(e -> instance.lastCmd = new Command(GameCommandType.NONE));
 
-        // --Mouse events
-        // Drag start
-        instance.setOnDragDetected(e -> {
-            // Adjust Command
+        instance.setOnMouseDragged(e -> {
+            if(instance.dragging == null) {
+                instance.lastCmd = new Command(
+                        GameCommandType.CLICK,
+                                XY.getBoardSpot(new XY((int) e.getX(), (int) e.getY()),
+                                        CELL_SIZE,
+                                        OFFSET));
+                instance.dragging = XY.getBoardSpot(new XY((int) e.getX(), (int) e.getY()),
+                        CELL_SIZE,
+                        OFFSET);
+            }
+            instance.cursorPos = new XY((int) e.getX(), (int) e.getY());
+            instance.setCursor(Cursor.CLOSED_HAND);
+        });
+
+        instance.setOnMouseReleased(e -> {
+            instance.message("Drag Released");
             instance.lastCmd = new Command(
                     GameCommandType.CLICK,
-                    XY.getBoardSpot(new XY((int) e.getX(), (int) e.getY()),
+                    XY.getBoardSpot(
+                            new XY((int)e.getX(), (int)e.getY()),
                             CELL_SIZE,
                             OFFSET));
-            // Set Dragging field
-            instance.dragging = XY.getBoardSpot(new XY((int) e.getX(), (int) e.getY()),
-                    CELL_SIZE,
-                    OFFSET);
-            // init dragboard
-            Dragboard dragBoard = instance.startDragAndDrop(TransferMode.ANY);
-            ClipboardContent content = new ClipboardContent();
-            content.putString("Wiilkommen zu meiner Schnitzeljagt! Sie haben das Erste Stück gefunden. Das nächste erwartet Sie schon!");
-            dragBoard.setContent(content);
-            instance.setCursor(Cursor.CLOSED_HAND);
-        });
-        // drag over
-        instance.setOnDragOver(e -> {
-            e.acceptTransferModes(TransferMode.ANY);
-            instance.setCursor(Cursor.CLOSED_HAND);
-            instance.cursorPos = new XY((int) e.getX(), (int)e.getY());
-        });
-        // drop
-        instance.setOnDragDropped(e -> {
-            // init command
-            instance.lastCmd = new Command(GameCommandType.CLICK, XY.getBoardSpot(
-                    new XY((int)e.getX(), (int)e.getY()),
-                    CELL_SIZE,
-                    OFFSET));
-            // reset dragging
             instance.dragging = null;
             instance.setCursor(Cursor.DEFAULT);
             e.consume();
         });
+
+//        // --Mouse events
+//        // Drag start
+//        instance.setOnDragDetected(e -> {
+//            // Adjust Command
+//            instance.lastCmd = new Command(
+//                    GameCommandType.CLICK,
+//                    XY.getBoardSpot(new XY((int) e.getX(), (int) e.getY()),
+//                            CELL_SIZE,
+//                            OFFSET));
+//            // Set Dragging field
+//            instance.dragging = XY.getBoardSpot(new XY((int) e.getX(), (int) e.getY()),
+//                    CELL_SIZE,
+//                    OFFSET);
+//            // init dragboard
+//            Dragboard dragBoard = instance.startDragAndDrop(TransferMode.ANY);
+//            dragBoard.setDragView(null);
+//            ClipboardContent content = new ClipboardContent();
+//            content.putString("Wiilkommen zu meiner Schnitzeljagt! Sie haben das Erste Stück gefunden. Das nächste erwartet Sie schon!");
+//            dragBoard.setContent(content);
+//            instance.setCursor(Cursor.CLOSED_HAND);
+//        });
+//        // drag over
+//        instance.setOnDragOver(e -> {
+//            e.acceptTransferModes(TransferMode.ANY);
+//            instance.setCursor(Cursor.CLOSED_HAND);
+//            instance.cursorPos = new XY((int) e.getX(), (int)e.getY());
+//        });
+//        // drop
+//        instance.setOnDragDropped(e -> {
+//            // init command
+//            instance.lastCmd = new Command(GameCommandType.CLICK, XY.getBoardSpot(
+//                    new XY((int)e.getX(), (int)e.getY()),
+//                    CELL_SIZE,
+//                    OFFSET));
+//            // reset dragging
+//            instance.dragging = null;
+//            instance.setCursor(Cursor.DEFAULT);
+//            e.consume();
+//        });
 
         return instance;
     }
@@ -134,16 +158,13 @@ public class FxUi extends Scene implements UI {
 
         gc.setFill(Color.BLACK);
         gc.setFont(new Font("Times New Roman", CELL_SIZE));
+        Piece draggedPiece = null;
         for(int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
                 Piece piece = view.getPieceAt(new XY(i, j));
                 if(piece != null) {
                     if(dragging != null && cursorPos != null && i == dragging.x && j == dragging.y) {
-                        gc.drawImage(SpriteLoader.valueOf(piece.getClass().getSimpleName().toUpperCase(Locale.ENGLISH)).getSprite(piece.getTeam()),
-                                cursorPos.x - (float)CELL_SIZE/2,
-                                cursorPos.y - (float)CELL_SIZE/2,
-                                CELL_SIZE,
-                                CELL_SIZE); // Dragged Piece
+                        draggedPiece = piece;
                     } else
                         gc.drawImage(SpriteLoader.valueOf(piece.getClass().getSimpleName().toUpperCase(Locale.ENGLISH)).getSprite(piece.getTeam()),
                                 i * CELL_SIZE + OFFSET,
@@ -153,6 +174,17 @@ public class FxUi extends Scene implements UI {
                 }
             }
         }
+        if(draggedPiece != null)
+            gc.drawImage(SpriteLoader
+                            .valueOf(draggedPiece
+                                    .getClass()
+                                    .getSimpleName()
+                                    .toUpperCase(Locale.ENGLISH))
+                            .getSprite(draggedPiece.getTeam()),
+                    cursorPos.x - (float)CELL_SIZE/2,
+                    cursorPos.y - (float)CELL_SIZE/2,
+                    CELL_SIZE,
+                    CELL_SIZE); // Dragged Piece
     }
 
     /*******************************************************************************************************************
